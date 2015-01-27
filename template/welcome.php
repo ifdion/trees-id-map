@@ -1,0 +1,1 @@
+<p>Welcome to basic-grunt-php.</p>

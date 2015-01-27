@@ -1,0 +1,26 @@
+{
+  "name": "basic-grunt-php",
+  "version": "0.0.0",
+  "authors": [
+    "Dion Priyandiono <ifdion@gmail.com>"
+  ],
+  "main": "index.php",
+  "license": "MIT",
+  "homepage": "http://saklik.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "modernizr": "~2.8.3",
+    "leaflet": "~0.7.3",
+    "leaflet-heat": "http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js",
+    "jquery": "~2.1.3",
+    "underscore": "~1.7.0"
+  },
+  "devDependencies": {}
+}
