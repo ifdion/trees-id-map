@@ -16,11 +16,14 @@
     "tests"
   ],
   "dependencies": {
+    "backbone": "~1.1.2",
+    "bootstrap": "~3.3.1",
     "modernizr": "~2.8.3",
-    "leaflet": "~0.7.3",
+    "bootstrap-sass-official": "~3.3.1",
     "leaflet-heat": "http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js",
-    "jquery": "~2.1.3",
-    "underscore": "~1.7.0"
+    "leaflet": "~0.7.3",
+    "blueimp-load-image": "~1.13.0",
+    "exif-js": "*"
   },
   "devDependencies": {}
 }

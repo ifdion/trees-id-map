@@ -11,8 +11,7 @@ module.exports = function(grunt) {
   ];
 
   var pluginList = [
-    'bower_components/leaflet/dist/leaflet.js',
-    'bower_components/leaflet-heat/index.js',
+    // 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/transition.js',
     // 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/alert.js',
     // 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/button.js',
     // 'bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/carousel.js',
@@ -27,30 +26,32 @@ module.exports = function(grunt) {
     // 'bower_components/magicsuggest/magicsuggest.js',
     // 'bower_components/velocity/velocity.js',
     // 'bower_components/chartjs/Chart.js',
+    'bower_components/leaflet/dist/leaflet.js',
+    'bower_components/leaflet-heat/index.js',
   ];
 
   grunt.initConfig({
-    // jshint: {
-    //   options: {
-    //     jshintrc: '.jshintrc'
-    //   },
-    //   all: [
-    //     'Gruntfile.js',
-    //     '!js/main.js',
-    //     '!**/*.min.*'
-    //   ]
-    // },
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc'
+      },
+      all: [
+        'Gruntfile.js',
+        '!js/main.js',
+        '!**/*.min.*'
+      ]
+    },
     // the sass block
-    // sass: {
-    //   dist: {
-    //     options: {
-    //       style: 'expanded'
-    //     },
-    //     files: {
-    //       'css/main.css': 'sass/main.scss'
-    //     }
-    //   }
-    // },
+    sass: {
+      dist: {
+        options: {
+          style: 'expanded'
+        },
+        files: {
+          'css/main.css': 'sass/main.scss'
+        }
+      }
+    },
     cssmin: {
         dist: {
             files: {
@@ -120,7 +121,7 @@ module.exports = function(grunt) {
         files: {
           'src': [
             ['js/vendors.min.js', 'js/plugins.min.js', 'js/main.min.js'],
-            ['css/main.min.css']
+            // ['css/main.min.css']
           ]
         },
         uglify: true,
@@ -137,20 +138,16 @@ module.exports = function(grunt) {
       //   tasks: ['less:dev']
       // },
       // do it with sass
-      // css: {
-      //   files: '**/*.scss',
-      //   tasks: ['sass']
-      // },
+      css: {
+        files: '**/*.scss',
+        tasks: ['sass']
+      },
       js: {
         files: [
           pluginList,
-          vendorList,
-          // '<%= jshint.all %>'
+          '<%= jshint.all %>'
         ],
-        tasks: [
-          // 'jshint',
-          'concat'
-        ]
+        tasks: ['jshint', 'concat']
       },
       livereload: {
         // Browser live reloading
@@ -163,7 +160,7 @@ module.exports = function(grunt) {
           'js/main.js',
           '*/*.php',
           '*.php',
-          'Gruntfile.js',
+          '*.html'
         ]
       }
     }
@@ -171,13 +168,12 @@ module.exports = function(grunt) {
 
   // Register tasks
   grunt.registerTask('default', [
-    'dev',
-    'concat'
+    'dev'
   ]);
   grunt.registerTask('dev', [
     // 'jshint',
     // 'less:dev',
-    // 'sass',
+    'sass',
     'cssmin',
     'concat'
   ]);
@@ -185,7 +181,7 @@ module.exports = function(grunt) {
     // 'jshint',
     // 'less:build',
     // 'sass',
-    'cssmin',
+    // 'cssmin',
     'uglify',
     'modernizr',
   ]);
