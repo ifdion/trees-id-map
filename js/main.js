@@ -61,7 +61,7 @@ jQuery(document).ready(function($) {
 			var callback_name = options.callbackName || 'callback',
 				on_success = options.onSuccess || function(){},
 				on_timeout = options.onTimeout || function(){},
-				timeout = options.timeout || 10; // sec
+				timeout = options.timeout || 20; // sec
 
 			var timeout_trigger = window.setTimeout(function(){
 				window[callback_name] = function(){};
@@ -109,7 +109,9 @@ jQuery(document).ready(function($) {
 		img.src = url;
 	}
 
-	function archiveMap(APIurl,heatmapData,polygonData,page){
+	function archiveMap(APIurl,heatmapData,polygonData,page,lotPage){
+
+		console.log(lotPage);
 
 		_jsonp.send(APIurl, {
 			onSuccess: function(APIresult){
@@ -151,7 +153,7 @@ jQuery(document).ready(function($) {
 						APIurl = APIurl.replace(/&page=?\d+$/g, '&page='+page);
 					}
 
-					archiveMap(APIurl, heatmapData, polygonData, page);
+					archiveMap(APIurl, heatmapData, polygonData, page, lotPage);
 
 				} else {
 					
@@ -173,8 +175,9 @@ jQuery(document).ready(function($) {
 								currentLot.forEach(function(value){
 									if (lastLot.indexOf(value) === -1) {
 										lastLot.push(value);
-										var lotDetail = 'test content';
-										var lotDetail = '<a class="popup-link text-center" href="#"><img id="popup-image" class="popup-image" src="'+ lotData[value[2]].img_lot +'"></div><br> <span>'+ lotData[value[2]].nama_lot+'</span></a>';
+										
+										var currentLotPage = lotPage.replace('[lot]', lotData[value[2]].id_lot);
+										var lotDetail = '<a class="popup-link text-center" href="'+ currentLotPage +'"><img id="popup-image" class="popup-image" src="'+ lotData[value[2]].img_lot +'" width="200" ></div><br> <span>'+ lotData[value[2]].nama_lot+'</span></a>';
 										activeLot[value[2]] = L.polygon(
 											lotData[value[2]].kordinat,{
 												color: lotPolygonColor,
@@ -210,7 +213,7 @@ jQuery(document).ready(function($) {
 		});
 	}
 	
-	function singleMap(lotID){
+	function singleMap(lotID,treePage){
 
 		var APIurl = 'http://api.trees.id/?object=lot&callback=callback&content=map&id=' + lotID;
 
@@ -235,10 +238,12 @@ jQuery(document).ready(function($) {
 							var currentTree = _.filter(APIresult.data, function(num){ return num[1] > (west - 0.00005 ) && num[1] < (east + 0.00005) && num[0] < (north + 0.00005) && num[0] > (south - 0.00005); });
 
 							if (currentTree.length > 0) {
-								currentTree.forEach(function(value){
+								currentTree.forEach(function(value, index){
 									if (lastTree.indexOf(value) === -1) {
 										lastTree.push(value);
-										var treeDetail = '<img src="' +  baseURL + APIresult.id_relawan  +'/'+ lotID +'/'+ value[2] +'" width="200">';
+
+										var currentTreePage = treePage.replace('[lot]',lotID).replace('[offset]',parseInt(value[2]));
+										var treeDetail = '<a href="'+ currentTreePage +'"><img src="' +  baseURL + APIresult.id_relawan  +'/'+ lotID +'/'+ value[2] +'" width="200"></a>';
 										activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 									};
 								})
@@ -327,14 +332,18 @@ jQuery(document).ready(function($) {
 		} else {
 
 			var lotID = mapObject.getAttribute('data-id');
+			
 			if (lotID) {
 
-				singleMap(lotID);
+				var treePage = mapObject.getAttribute('data-tree-page');
+				singleMap(lotID,treePage);
 
 			} else {
 
 				var APIurl = 'http://api.trees.id/?object=lot&per_page='+lotPerPage+'&callback=callback';
 				var queryParameter = [];
+
+				var lotPage = mapObject.getAttribute('data-lot-page');
 
 				archiveParameter.forEach(function(item, i){
 					var parameterValue = mapObject.getAttribute('data-'+item);
@@ -344,7 +353,7 @@ jQuery(document).ready(function($) {
 					}
 				});
 
-				archiveMap(APIurl,lotCoordinate,lotData,1);
+				archiveMap(APIurl,lotCoordinate,lotData,1,lotPage);
 			}
 		}
 	}
