@@ -316,6 +316,21 @@ jQuery(document).ready(function($) {
 		// })
 	}
 
+	function treeMapOffset(lotID, offset){
+
+		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&lot_id=' + lotID +'&tree_offset='+offset;
+		_jsonp.send(APIurl, {
+			onSuccess: function(APIresult){
+				window.map = new L.Map('trees-id-map', {center: APIresult.data[0].tree_kordinat , zoom: markerBreakPoint, layers: [Esri_WorldImagery], scrollWheelZoom: false});
+				var treeDetail = '<img src="' +  APIresult.data[0].img_tree +'" width="200">';
+				var treeMarker = L.marker(APIresult.data[0].tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
+			},
+			 onTimeout: function(){
+				console.log('timeout!');
+			},
+		});
+	}
+	
 	function renderMap(){
 
 		var mapType;
@@ -325,9 +340,17 @@ jQuery(document).ready(function($) {
 
 			var treeID = mapObject.getAttribute('data-id');
 
-			console.log('treeID', treeID);
+			if (treeID != 'null'){
+				console.log('treeID', treeID);
 
-			treeMap(treeID);
+				treeMap(treeID);
+			} else {
+				var lotIDTree = mapObject.getAttribute('data-lot_id');
+				var offset_tree = mapObject.getAttribute('data-offset');
+				console.log('lotIDTree :'+ lotIDTree +' | offset_tree :'+offset_tree);
+
+				treeMapOffset(lotIDTree, offset_tree);
+			}
 
 		} else {
 
