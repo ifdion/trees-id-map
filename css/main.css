@@ -534,4 +534,20 @@
   border: 1px solid #666;
 }
 
+#trees-id-map-progress {
+  border: 1px solid teal;
+  transition: all 0.5s ease-out;
+}
+
+#trees-id-map-progress-bar {
+  height: 0.5em;
+  background-color: teal;
+  transition: all 0.5s ease-out;
+}
+
+#trees-id-map {
+  height: 600px;
+  background: teal;
+}
+
 /*# sourceMappingURL=main.css.map */

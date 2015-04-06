@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Leaflet Tree Map</title>
-
-	<link rel="stylesheet" type="text/css" href="css/main.min.css">
+	<title>Tree Map by Offset</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
 </head>
 <body>
 
-	<div id="trees-id-map" class="" data-source="" data-map-type="tree" data-id="null" data-lot_id="19461" data-offset="718" style="height:400px; background:teal;"></div>
+	<div id="trees-id-map" data-map-type="tree" data-lot_id="19461" data-offset="718"></div>
 	
 	<script type="text/javascript" src="js/vendors.js"></script>
 	<script type="text/javascript" src="js/plugins.js"></script>
-	<script type="text/javascript" src="js/main.js"></script>
+	<script type="text/javascript" src="js/trees-id-map.js"></script>
+	<script type="text/javascript">
+		treeMap('trees-id-map');
+	</script>
 </body>
 </html>
