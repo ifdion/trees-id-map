@@ -157,62 +157,61 @@ function archiveMap(elementID,heatmapData,polygonData,page){
 				page ++;
 				archiveMap(elementID, heatmapData, polygonData, page);
 			} else {
-
 				progressBar.style.height = 0;
-
 				window.map.fitBounds(heatmapData);
-				window.map.on('zoomend dragend', function(e) {
-					var zoom_level = window.map.getZoom();
-					if (zoom_level >= polygonBreakPoint){
-						var
-							bounds = window.map.getBounds(),
-							west = bounds.getWest(),
-							south = bounds.getSouth(),
-							east = bounds.getEast(),
-							north = bounds.getNorth()
-						;
-
-						var currentLot = _.filter(heatmapData, function(num){ return num[1] > (west - 0.005 ) && num[1] < (east + 0.005  ) && num[0] < (north + 0.005 ) && num[0] > (south - 0.005 ); });
-
-						if (currentLot.length > 0) {
-
-							currentLot.forEach(function(value){
-								if (lastLot.indexOf(value) === -1) {
-									lastLot.push(value);
-									
-									var currentLotPage = lotPage.replace('[lot]', polygonData[value[2]].id_lot);
-									var lotDetail = '<a class="popup-link text-center" href="'+ currentLotPage +'"><img id="popup-image" class="popup-image" src="'+ polygonData[value[2]].img_lot +'" width="200" ></div><br> <span>'+ polygonData[value[2]].nama_lot+'</span></a>';
-									activeLot[value[2]] = L.polygon(
-										polygonData[value[2]].kordinat,{
-											color: lotPolygonColor,
-											weight: lotPolygonWeight,
-											fillColor: lotPolygonFillColor,
-											fillOpacity: lotPolygonFillOpacity,
-										}).bindPopup(lotDetail);
-									activeLot[value[2]].addTo(window.map);
-								};
-							})
-						}
-
-						var removeLot = _.difference(lastLot, currentLot);
-						
-						removeLot.forEach(function(value){
-							var index = lastLot.indexOf(value);
-							lastLot.splice(index, 1);
-							window.map.removeLayer(activeLot[value[2]]);
-						})
-
-						window.map.removeLayer(window.heat);
-
-					} else{
-						window.heat.addTo(window.map);
-						activeLot.forEach(function(value){
-							window.map.removeLayer(value);
-						});
-						lastLot = [];
-					}
-				});
 			}
+			
+			window.map.on('zoomend dragend', function(e) {
+				var zoom_level = window.map.getZoom();
+				if (zoom_level >= polygonBreakPoint){
+					var
+						bounds = window.map.getBounds(),
+						west = bounds.getWest(),
+						south = bounds.getSouth(),
+						east = bounds.getEast(),
+						north = bounds.getNorth()
+					;
+
+					var currentLot = _.filter(heatmapData, function(num){ return num[1] > (west - 0.005 ) && num[1] < (east + 0.005  ) && num[0] < (north + 0.005 ) && num[0] > (south - 0.005 ); });
+
+					if (currentLot.length > 0) {
+
+						currentLot.forEach(function(value){
+							if (lastLot.indexOf(value) === -1) {
+								lastLot.push(value);
+								
+								var currentLotPage = lotPage.replace('[lot]', polygonData[value[2]].id_lot);
+								var lotDetail = '<a class="popup-link text-center" href="'+ currentLotPage +'"><img id="popup-image" class="popup-image" src="'+ polygonData[value[2]].img_lot +'" width="200" ></div><br> <span>'+ polygonData[value[2]].nama_lot+'</span></a>';
+								activeLot[value[2]] = L.polygon(
+									polygonData[value[2]].kordinat,{
+										color: lotPolygonColor,
+										weight: lotPolygonWeight,
+										fillColor: lotPolygonFillColor,
+										fillOpacity: lotPolygonFillOpacity,
+									}).bindPopup(lotDetail);
+								activeLot[value[2]].addTo(window.map);
+							};
+						})
+					}
+
+					var removeLot = _.difference(lastLot, currentLot);
+					
+					removeLot.forEach(function(value){
+						var index = lastLot.indexOf(value);
+						lastLot.splice(index, 1);
+						window.map.removeLayer(activeLot[value[2]]);
+					})
+
+					window.map.removeLayer(window.heat);
+
+				} else{
+					window.heat.addTo(window.map);
+					activeLot.forEach(function(value){
+						window.map.removeLayer(value);
+					});
+					lastLot = [];
+				}
+			});
 		},
 		 onTimeout: function(){
 			console.log('timeout!');
