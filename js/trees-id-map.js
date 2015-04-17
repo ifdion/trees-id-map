@@ -333,11 +333,13 @@ function treeMap(elementID){
 	var treeID = mapObject.getAttribute('data-id');
 
 	if (treeID != undefined) {
-		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&single_id=' + treeID;
+		var arrayLength = treeID.split(',').length;
+		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&single_id=' + treeID +'&per_page='+arrayLength;
 	} else {
 		var lotID = mapObject.getAttribute('data-lot_id');
 		var offset = mapObject.getAttribute('data-offset');
-		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&lot_id=' + lotID +'&tree_offset='+offset;
+		var arrayLength = offset.split(',').length;
+		var APIurl = 'http://api.trees.id/?object=tree&callback=callback&lot_id=' + lotID +'&tree_offset='+offset +'&per_page='+arrayLength;
 	}
 
 	_jsonp.send(APIurl, {
