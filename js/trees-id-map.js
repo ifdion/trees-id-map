@@ -247,7 +247,7 @@ function singleMap(elementID){
 						activeTree[parseInt(value)] = L.marker([ APIresult.data[value][0], APIresult.data[value][1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 					});
 					window.map.fitBounds(coordinateArray);
-					activeTree.slice(-1)[0].openPopup();
+					// activeTree.slice(-1)[0].openPopup();
 
 				} else {
 					
@@ -350,7 +350,7 @@ function treeMap(elementID){
 			APIresult.data.forEach(function(value,index){
 				console.log(value, index);
 				var treeDetail = '<img src="' +  value.img_tree +'" width="200">';
-				var treeMarker = L.marker(value.tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail).openPopup();
+				var treeMarker = L.marker(value.tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 			});
 
 		},
