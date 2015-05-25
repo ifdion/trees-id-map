@@ -393,11 +393,11 @@ jQuery(document).ready(function($) {
 										var treeDetail = '<a href="'+ currentTreePage +'"><img src="' + treeData[value[2]].img_tree +'" width="200"></a>';
 										activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 										
-										console.log(treeData[value[2]].id_tree+'|'+value[0]+'|'+value[1]);
+										//console.log(treeData[value[2]].id_tree+'|'+value[0]+'|'+value[1]);
 									};
 								})
 							}
-							console.log(activeTree);
+							//console.log(activeTree);
 
 							var removeTree = _.difference(lastTree, currentTree);
 							removeTree.forEach(function(value){
