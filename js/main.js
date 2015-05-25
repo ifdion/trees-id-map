@@ -366,7 +366,7 @@ jQuery(document).ready(function($) {
 						APIurl = APIurl.replace(/&page=?\d+$/g, '&page='+page);
 					}
 
-					archiveMap(APIurl, heatmapData, polygonData, page, treePage);
+					archiveMapTree(APIurl, heatmapData, polygonData, page, treePage);
 
 				} else {
 					
