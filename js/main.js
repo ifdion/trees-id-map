@@ -323,7 +323,11 @@ jQuery(document).ready(function($) {
 
 	function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
 
-		console.log(treePage);
+		console.log(page);
+		var mapObject = document.getElementById('trees-id-map');
+		if (page == 1) {
+			mapObject.insertAdjacentHTML('beforebegin', '<div id="trees-id-map-progress"><div id="trees-id-map-progress-bar" style="width:0%;"></div>');
+		}
 
 		_jsonp.send(APIurl, {
 			onSuccess: function(APIresult){
@@ -339,16 +343,19 @@ jQuery(document).ready(function($) {
 					polygonData[value.id_tree] = value;
 					//console.log('tree : '+ value.tree_kordinat[0]);
 				})
-				console.log(APIresult.totalCount);
+				//console.log(APIresult.totalCount);
 
 				var percentage = heatmapData.length / APIresult.totalCount * 100;
 				var totalPage = Math.ceil(APIresult.totalCount / treePerPage);
+
+				var progressBar = document.getElementById('trees-id-map-progress-bar');
+				progressBar.style.width = percentage+'%';
 
 				console.log(percentage.toFixed(2) + ' percent ');
 
 				if (page < 2) {
 					var mapCentered = _.map(mapCenter, function(num){ return num / heatmapData.length ; });
-					window.map = new L.Map('trees-id-map', {center: mapCentered, zoom: initialZoom, layers: [Esri_WorldImagery]});
+					window.map = new L.Map('trees-id-map', {center: mapCentered, zoom: polygonBreakPoint, layers: [Esri_WorldImagery]});
 					window.heat = L.heatLayer(heatmapData, heatmapSetting).addTo(window.map);
 				} else {
 					// var mapCentered = _.map(mapCenter, function(num){ return num / heatmapData.length ; });
@@ -356,6 +363,9 @@ jQuery(document).ready(function($) {
 					// var heat = L.heatLayer(heatmapData, heatmapSetting).addTo(window.map);
 					window.heat.setLatLngs(heatmapData);
 				}
+
+
+				
 
 				if (totalPage > 1 && page < totalPage) {
 					page ++;
@@ -372,7 +382,7 @@ jQuery(document).ready(function($) {
 					
 					window.map.on('zoomend dragend', function(e) {
 						var zoom_level = window.map.getZoom();
-						if (zoom_level >= 10){
+						if (zoom_level >= 20){
 							var
 								bounds = window.map.getBounds(),
 								west = bounds.getWest(),
@@ -418,6 +428,7 @@ jQuery(document).ready(function($) {
 							lastTree = [];
 						}
 					});
+					
 				}
 			}
 		});
@@ -437,8 +448,8 @@ jQuery(document).ready(function($) {
 			treeMap(treeID);
 
 		} else if (mapType == 'archive-tree') {
-			alert('yes');
-
+			//alert('yes');
+			console.log('start archive tree');
 			var APIurl = 'http://api.trees.id/?object=tree&per_page='+treePerPage+'&callback=callback';
 			var queryParameter = [];
 
