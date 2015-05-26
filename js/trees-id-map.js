@@ -302,7 +302,7 @@ function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
 								if (lastTree.indexOf(value) === -1) {
 									lastTree.push(value);
 
-									var currentTreePage = treePage.replace('[lot]',treeData[value[2]].tree_lot_id).replace('[offset]',parseInt(value[2]));
+									var currentTreePage = treePage.replace('[lot]',treeData[value[2]].tree_lot_id).replace('[offset]',treeData[value[2]].tree_offset);
 									var treeDetail = '<a href="'+ currentTreePage +'"><img src="' + treeData[value[2]].img_tree +'" width="200"></a>';
 									activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 									
