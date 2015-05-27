@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Single Lot Map</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/doc.css">
+</head>
+<body>
+
+	<h1>Single Lot Map</h1>
+	<p>This function turns an element into a leaflet map that display a single lot. The map will be displayed as a zoomable heat map if the lot already has the tree photos data. As a fall back, the map will be displayed as a polygon if the data are not available. The heat map are responding to the tree cluster and will be displayed as marker on higher zoom level</p>
+	<h4>Usage</h4>
+
+	<pre style="white-space:pre-line;">
+		&lt;div id="trees-id-map" data-id="248" data-tree-page="http://portal.trees.id/tree-view-new/[lot]/[offset]"&gt;&lt;/div&gt;
+
+		&lt;script type="text/javascript"&gt;
+		singleMap('trees-id-map');
+		&lt;/script&gt;
+	</pre>
+
+	<h4>Required Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-id</code></dt>
+		<dd><strong>[int]</strong> The ID of the lot to be displayed</dd>
+		<dt><code>data-tree-page</code></dt>
+		<dd><strong>[string]</strong> Base URL template to be used as single tree URL.</dd>
+	</dl>
+
+	<h4>Optional Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-offset</code></dt>
+		<dd><strong>[string]</strong>Comma separated integer of tree offset to be displayed as marker</dd>
+	</dl>
+
+	<h4>Demo (as Heatmap)</h4>
+
+	<div id="trees-id-map" data-id="248" data-tree-page="http://portal.trees.id/tree-view-new/[lot]/[offset]"></div>
+
+	<ul>
+		<li><a href="lot-single-polygon.html"> Demo of Lot Polygon</a></li>
+		<li><a href="lot-single-tree-selection.html">Demo of Lot Tree Selection</a></li>
+	</ul>
+	
+
+	<h4>To Do</h4>
+	<ul>
+		<li><strong>[bug]</strong> Heatmap weird behaviour on zoomout</li>
+		<li>Create map using JavaScript object.</li>
+		<li>Add instruction on how to use the map.</li>
+	</ul>
+	
+	<script type="text/javascript" src="js/vendors.js"></script>
+	<script type="text/javascript" src="js/plugins.js"></script>
+	<script type="text/javascript" src="js/trees-id-map.js"></script>
+	<script type="text/javascript">
+		singleMap('trees-id-map');
+	</script>
+</body>
+</html>

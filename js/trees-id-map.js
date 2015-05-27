@@ -34,7 +34,8 @@ var heatmapSetting = {
 }
 
 var baseURL = 'http://api.trees.id/tree/';
-var archiveParameter = ['program_id', 'project_id', 'block_id', 'relawan_id', 'verifikator_id', 'petani_id', 'status', 'nohp'];
+var lotArchiveParameter = ['program_id', 'project_id', 'block_id', 'relawan_id', 'verifikator_id', 'petani_id', 'status', 'nohp'];
+var treeArchiveParameter = ['lot_id', 'donatur_email', 'code', 'invoice', 'nohp', 'affiliate'];
 
 // polygon vars
 var lotPolygonColor = 'lime',
@@ -119,7 +120,7 @@ function archiveMap(elementID,heatmapData,polygonData,page){
 	}
 
 	APIurl = APIurl + '&page=' + page;
-	archiveParameter.forEach(function(item, i){
+	lotArchiveParameter.forEach(function(item, i){
 		var parameterValue = mapObject.getAttribute('data-'+item);
 		if (parameterValue) {
 			APIurl = APIurl + '&' + item + '=' + parameterValue;
@@ -224,68 +225,92 @@ function archiveMap(elementID,heatmapData,polygonData,page){
 	});
 }
 
-function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
+function archiveTreeMap(elementID,heatmapData,polygonData,page){
 
-	//console.log(page);
-	var mapObject = document.getElementById('trees-id-map');
-	if (page == 1) {
-		mapObject.insertAdjacentHTML('beforebegin', '<div id="trees-id-map-progress"><div id="trees-id-map-progress-bar" style="width:0%;"></div>');
+	// setup variable
+	var mapObject = document.getElementById(elementID);
+	var APIurl = 'http://api.trees.id/?object=tree&per_page='+treePerPage+'&callback=callback';
+	var treePage = mapObject.getAttribute('data-tree-page');
+
+	// setup variable for recursive
+	if (!heatmapData) {
+		var heatmapData = [];
+		var polygonData = [];
+	}
+	if (!page) {
+		var page = 1;
 	}
 
+	// setup url for the API call
+	APIurl = APIurl + '&page=' + page;
+	treeArchiveParameter.forEach(function(item, i){
+		var parameterValue = mapObject.getAttribute('data-'+item);
+		if (parameterValue) {
+			APIurl = APIurl + '&' + item + '=' + parameterValue;
+		}
+	});
+
+	// add progress bar
+	if (page == 1) {
+		mapObject.insertAdjacentHTML('beforebegin', '<div id="trees-id-map-progress"><div id="trees-id-map-progress-bar" style="width:0%;"></div>');
+		console.log('added loading bar');
+	}
+
+	// make the API call
 	_jsonp.send(APIurl, {
 		onSuccess: function(APIresult){
-
 			APIresult.data.forEach(function(value,index,array){
+				// add if the lot has tree kordinat value
 				if (value.tree_kordinat) {
 					var lat = parseFloat(value.tree_kordinat[0]);
 					var lng = parseFloat(value.tree_kordinat[1]);
-					heatmapData.push([lat, lng, value.id_tree]);
+					heatmapData.push([lat, lng, value.id_tree, value.tree_lot_id]);
+
+					// added to determine map center
 					mapCenter[0] += lat;
 					mapCenter[1] += lng;
 				}
 				polygonData[value.id_tree] = value;
-				//console.log('tree : '+ value.tree_kordinat[0]);
 			})
-			//console.log(APIresult.totalCount);
 
+			// increment the progress bar
 			var percentage = heatmapData.length / APIresult.totalCount * 100;
-			var totalPage = Math.ceil(APIresult.totalCount / treePerPage);
-
 			var progressBar = document.getElementById('trees-id-map-progress-bar');
 			progressBar.style.width = percentage+'%';
-
 			console.log(percentage.toFixed(2) + ' percent ');
 
+			// count total page
+			var totalPage = Math.ceil(APIresult.totalCount / treePerPage);
+
 			if (page < 2) {
+
+				console.log('test',APIresult);
+
+				// initiate the map, heatmap
 				var mapCentered = _.map(mapCenter, function(num){ return num / heatmapData.length ; });
 				window.map = new L.Map('trees-id-map', {center: mapCentered, zoom: polygonBreakPoint, layers: [Esri_WorldImagery]});
 				window.heat = L.heatLayer(heatmapData, heatmapSetting).addTo(window.map);
 			} else {
-				// var mapCentered = _.map(mapCenter, function(num){ return num / heatmapData.length ; });
-				// window.map.panTo(mapCentered);
-				// var heat = L.heatLayer(heatmapData, heatmapSetting).addTo(window.map);
+				// update the heat map using the data
 				window.heat.setLatLngs(heatmapData);
 			}
 
-
-			
-
 			if (totalPage > 1 && page < totalPage) {
+				// recall the function for consecutive page, if any
 				page ++;
-
 				if (APIurl.indexOf("&page=") === -1) {
 					APIurl = APIurl + '&page=' + page;
 				} else {
 					APIurl = APIurl.replace(/&page=?\d+$/g, '&page='+page);
 				}
-
-				archiveMapTree(APIurl, heatmapData, polygonData, page, treePage);
+				archiveTreeMap(elementID, heatmapData, polygonData, page);
 
 			} else {
-				
+				// change the map zoom and drag
 				window.map.on('zoomend dragend', function(e) {
 					var zoom_level = window.map.getZoom();
-					if (zoom_level >= 20){
+
+					if (zoom_level >= markerBreakPoint){
 						var
 							bounds = window.map.getBounds(),
 							west = bounds.getWest(),
@@ -294,7 +319,6 @@ function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
 							north = bounds.getNorth()
 						;
 
-
 						var currentTree = _.filter(heatmapData, function(num){ return num[1] > (west - 0.00005 ) && num[1] < (east + 0.00005) && num[0] < (north + 0.00005) && num[0] > (south - 0.00005); });
 
 						if (currentTree.length > 0) {
@@ -302,15 +326,12 @@ function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
 								if (lastTree.indexOf(value) === -1) {
 									lastTree.push(value);
 
-									var currentTreePage = treePage.replace('[lot]',treeData[value[2]].tree_lot_id).replace('[offset]',treeData[value[2]].tree_offset);
-									var treeDetail = '<a href="'+ currentTreePage +'"><img src="' + treeData[value[2]].img_tree +'" width="200"></a>';
+									var currentTreePage = treePage.replace('[lot]',value[3]).replace('[offset]',parseInt(value[2]));
+									var treeDetail = '<a href="'+ currentTreePage +'"><img src="' +  baseURL + APIresult.id_relawan  +'/'+ value[3] +'/'+ value[2] +'" width="200"></a>';
 									activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
-									
-									//console.log(treeData[value[2]].id_tree+'|'+value[0]+'|'+value[1]);
 								};
 							})
 						}
-						//console.log(activeTree);
 
 						var removeTree = _.difference(lastTree, currentTree);
 						removeTree.forEach(function(value){
@@ -331,6 +352,58 @@ function archiveMapTree(APIurl,heatmapData,polygonData,page,treePage){
 						lastTree = [];
 					}
 				});
+
+				// window.map.on('zoomend dragend', function(e) {
+				// 	var zoom_level = window.map.getZoom();
+				// 	if (zoom_level >= 20){
+				// 		var
+				// 			bounds = window.map.getBounds(),
+				// 			west = bounds.getWest(),
+				// 			south = bounds.getSouth(),
+				// 			east = bounds.getEast(),
+				// 			north = bounds.getNorth()
+				// 		;
+
+				// 		var currentTree = _.filter(heatmapData, function(num){ return num[1] > (west - 0.00005 ) && num[1] < (east + 0.00005) && num[0] < (north + 0.00005) && num[0] > (south - 0.00005); });
+
+				// 		if (currentTree.length > 0) {
+
+				// 			console.log('currentTree.length', currentTree.length);
+				// 			console.log('lastTree.length', lastTree.length);
+
+				// 			currentTree.forEach(function(value, index){
+				// 				if (lastTree.indexOf(value) === -1) {
+				// 					lastTree.push(value);
+
+				// 			// 		var currentTreePage = treePage.replace('[lot]',treeData[value[2]].tree_lot_id).replace('[offset]',treeData[value[2]].tree_offset);
+				// 			// 		var treeDetail = '<a href="'+ currentTreePage +'"><img src="' + treeData[value[2]].img_tree +'" width="200"></a>';
+				// 			// 		activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
+									
+				// 					// console.log(treeData[value[2]].id_tree+'|'+value[0]+'|'+value[1]);
+				// 				};
+				// 			})
+				// 		}
+				// 		//console.log(activeTree);
+
+				// 		var removeTree = _.difference(lastTree, currentTree);
+				// 		removeTree.forEach(function(value){
+				// 			var index = lastTree.indexOf(value);
+				// 			lastTree.splice(index, 1);
+				// 			window.map.removeLayer(activeTree[value[2]]);
+				// 		})
+
+				// 		window.map.removeLayer(window.heat);
+
+				// 	} else{
+
+				// 		window.heat.addTo(window.map);
+				// 		lastTree.forEach(function(value){
+				// 			window.map.removeLayer(activeTree[value[2]]);
+				// 		});
+
+				// 		lastTree = [];
+				// 	}
+				// });
 				
 			}
 		}

@@ -3,10 +3,49 @@
 <head>
 	<title>Lot Archive Map</title>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/doc.css">
 </head>
 <body>
 
-	<div id="trees-id-map" data-map-type="archive" data-program_id="1" data-lot-page="http://v3.twitgreen.com/l/[lot]"></div>
+	<h1>Lot Archive Map</h1>
+	<p>This function turns an element into a leaflet map that display multiple lots, based on its custom attributes. Lot are queried by increment of 20 lot at a time. By default the map start as a heat map on smaller zoom level and will be converted into map of lot polygons on higher zoom level.</p>
+	<h4>Usage</h4>
+
+	<pre style="white-space:pre-line;">
+	&lt;div id="trees-id-map" data-program_id="1" data-lot-page="http://v3.twitgreen.com/l/[lot]"&gt;&lt;/div&gt;
+
+	&lt;script type="text/javascript"&gt;
+		archiveMap('trees-id-map');
+	&lt;/script&gt;
+	</pre>
+
+	<h4>Required Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-lot-page</code></dt>
+		<dd><strong>[string]</strong> Base URL template to be used as single lot URL.</dd>
+	</dl>
+
+	<h4>Optional Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-program_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Program ids to be queried</dd>
+		<dt><code>data-project_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Project ids to be queried</dd>
+		<dt><code>data-block_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Block ids to be queried</dd>
+		<dt><code>data-relawan_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Relawan ids to be queried</dd>
+		<dt><code>data-verifikator_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Verifikator ids to be queried</dd>
+		<dt><code>data-petani_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Petani ids to be queried</dd>
+		<dt><code>data-status_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Lot Status to be queried</dd>
+	</dl>
+
+	<h4>Demo</h4>
+
+	<div id="trees-id-map" data-program_id="1" data-lot-page="http://v3.twitgreen.com/l/[lot]"></div>
 
 	<script type="text/javascript" src="js/vendors.js"></script>
 	<script type="text/javascript" src="js/plugins.js"></script>
@@ -14,5 +53,13 @@
 	<script type="text/javascript">
 		archiveMap('trees-id-map');
 	</script>
+
+	<h4>To Do</h4>
+	<ul>
+		<li>Create map using JavaScript object.</li>
+		<li>Add instruction on how to use the map.</li>
+	</ul>
+
+
 </body>
 </html>

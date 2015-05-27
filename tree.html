@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tree Map</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/doc.css">
+</head>
+<body>
+
+	<h1>Tree Map</h1>
+	<p>This function turns an element into a leaflet map that display trees, based on its attributes. There are several method to query the trees : 
+		<ul>
+			<li>by tree ids,</li>
+			<li>by tree offsets in conjuction with the lot id (similar with the single lot map with the tree offset attribute),</li>
+			<li>by donor phone number.</li>
+		</ul>
+	</p>
+	<h4>Usage</h4>
+
+	<pre style="white-space:pre-line;">
+		&lt;div id="trees-id-map" data-id="2550,2549"&gt;&lt;/div&gt;
+
+		&lt;script type="text/javascript"&gt;
+		treeMap('trees-id-map');
+		&lt;/script&gt;
+	</pre>
+
+	<h4>Required Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-id</code> *</dt>
+		<dd><strong>[string]</strong> Comma separated integer of tree ids to be displayed as marker</dd>
+		<dt><code>data-lot_id</code> **</dt>
+		<dd><strong>[int]</strong> The ID of the lot to be displayed</dd>
+
+		<dt><code>data-offset</code> **</dt>
+		<dd><strong>[int]</strong> tree offset to be displayed as marker</dd>
+
+		<dt><code>data-nohp</code> ***</dt>
+		<dd><strong>[string]</strong> Donor phone number</dd>
+	</dl>
+
+	<h4>Demo</h4>
+
+	<div id="trees-id-map" data-id="2550,2549"></div>
+
+	<ul>
+		<li><a href="tree-by-offset.html"> Demo of Trees Queried by Lot ID and Tree Offset</a></li>
+		<li><a href="tree-by-donor-phone-number.html"> Demo of Trees Queried by Donor Phone Number</a></li>
+	</ul>
+	
+	<script type="text/javascript" src="js/vendors.js"></script>
+	<script type="text/javascript" src="js/plugins.js"></script>
+	<script type="text/javascript" src="js/trees-id-map.js"></script>
+	<script type="text/javascript">
+		treeMap('trees-id-map');
+	</script>
+</body>
+</html>
