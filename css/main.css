@@ -548,6 +548,7 @@
 #trees-id-map {
   height: 600px;
   background: teal;
+  display: block;
 }
 
 /*# sourceMappingURL=main.css.map */
