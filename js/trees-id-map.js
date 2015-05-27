@@ -91,10 +91,10 @@ var _jsonp = (function(){
 
 //Returns true if it is a DOM element    
 function isElement(o){
-  return (
-    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
-);
+	return (
+		typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+		o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+	);
 }
 
 function archiveMap(elementID,heatmapData,polygonData,page){
@@ -264,7 +264,7 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 				if (value.tree_kordinat) {
 					var lat = parseFloat(value.tree_kordinat[0]);
 					var lng = parseFloat(value.tree_kordinat[1]);
-					heatmapData.push([lat, lng, value.id_tree, value.tree_lot_id]);
+					heatmapData.push([lat, lng, value.id_tree, value.img_tree]);
 
 					// added to determine map center
 					mapCenter[0] += lat;
@@ -306,6 +306,9 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 				archiveTreeMap(elementID, heatmapData, polygonData, page);
 
 			} else {
+
+				console.log(heatmapData);
+
 				// change the map zoom and drag
 				window.map.on('zoomend dragend', function(e) {
 					var zoom_level = window.map.getZoom();
@@ -325,9 +328,9 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 							currentTree.forEach(function(value, index){
 								if (lastTree.indexOf(value) === -1) {
 									lastTree.push(value);
-
+									// console.log(value);
 									var currentTreePage = treePage.replace('[lot]',value[3]).replace('[offset]',parseInt(value[2]));
-									var treeDetail = '<a href="'+ currentTreePage +'"><img src="' +  baseURL + APIresult.id_relawan  +'/'+ value[3] +'/'+ value[2] +'" width="200"></a>';
+									var treeDetail = '<img src="' + value[3] +'" width="200">';
 									activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 								};
 							})
