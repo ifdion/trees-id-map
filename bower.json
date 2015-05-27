@@ -1,10 +1,10 @@
 {
-  "name": "basic-grunt-php",
-  "version": "0.0.0",
+  "name": "trees-id-map",
+  "version": "0.1",
   "authors": [
     "Dion Priyandiono <ifdion@gmail.com>"
   ],
-  "main": "index.php",
+  "main": "index.html",
   "license": "MIT",
   "homepage": "http://saklik.com",
   "private": true,
