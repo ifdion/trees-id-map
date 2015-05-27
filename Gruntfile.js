@@ -65,20 +65,6 @@ module.exports = function(grunt) {
         }
       },
     },
-    modernizr: {
-      build: {
-        devFile: 'bower_components/modernizr/modernizr.js',
-        outputFile: 'js/modernizr.min.js',
-        files: {
-          'src': [
-            ['js/vendors.min.js', 'js/plugins.min.js', 'js/trees-id-map.min.js'],
-            // ['css/main.min.css']
-          ]
-        },
-        uglify: true,
-        parseFiles: true
-      }
-    },
     watch: {
       css: {
         files: '**/*.scss',
@@ -113,18 +99,14 @@ module.exports = function(grunt) {
     'dev'
   ]);
   grunt.registerTask('dev', [
-    // 'jshint',
-    // 'less:dev',
     'sass',
     'cssmin',
     'concat'
   ]);
   grunt.registerTask('build', [
-    // 'jshint',
-    // 'less:build',
-    // 'sass',
-    // 'cssmin',
+    'sass',
+    'cssmin',
+    'concat',
     'uglify',
-    'modernizr',
   ]);
 };

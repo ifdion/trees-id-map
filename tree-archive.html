@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Map of Trees Archive</title>
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/doc.css">
+</head>
+<body>
+
+	<h1>Map of Trees Archive</h1>
+	<p>This function turns an element into a leaflet map that display multiple trees, based on its custom attributes. Trees are queried by increment of 20 tree at a time. By default the map start as a heat map on smaller zoom level and will be converted into map of tree markers on higher zoom level.</p>
+
+	<h4>Usage</h4>
+	<pre style="white-space:pre-line;">
+		&lt;div id="trees-id-map" data-nohp="0811101272" &gt;&lt;/div&gt;
+
+		&lt;script type="text/javascript"&gt;
+			archiveTreeMap('trees-id-map');
+		&lt;/script&gt;
+	</pre>
+
+	<h4>Optional Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-lot_id</code></dt>
+		<dd><strong>[int]</strong> Trees ID Program ids to be queried</dd>
+		<dt><code>data-donatur_email</code></dt>
+		<dd><strong>[string]</strong> Trees ID Project ids to be queried</dd>
+		<dt><code>data-code</code></dt>
+		<dd><strong>[string]</strong> Trees ID Block ids to be queried</dd>
+		<dt><code>data-invoice</code></dt>
+		<dd><strong>[string]</strong> Trees ID Relawan ids to be queried</dd>
+		<dt><code>data-nohp</code></dt>
+		<dd><strong>[int]</strong> Trees ID Verifikator ids to be queried</dd>
+		<dt><code>data-affiliate</code></dt>
+		<dd><strong>[string]</strong> Trees ID Petani ids to be queried</dd>
+	</dl>
+
+	<h4>Demo</h4>
+	<div id="trees-id-map" data-nohp="0811101272" ></div>
+	
+	<script type="text/javascript" src="js/vendors.js"></script>
+	<script type="text/javascript" src="js/plugins.js"></script>
+	<script type="text/javascript" src="js/trees-id-map.js"></script>
+	<script type="text/javascript">
+		archiveTreeMap('trees-id-map');
+	</script>
+</body>
+</html>
