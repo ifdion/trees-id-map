@@ -253,7 +253,6 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 	// add progress bar
 	if (page == 1) {
 		mapObject.insertAdjacentHTML('beforebegin', '<div id="trees-id-map-progress"><div id="trees-id-map-progress-bar" style="width:0%;"></div>');
-		console.log('added loading bar');
 	}
 
 	// make the API call
@@ -264,7 +263,7 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 				if (value.tree_kordinat) {
 					var lat = parseFloat(value.tree_kordinat[0]);
 					var lng = parseFloat(value.tree_kordinat[1]);
-					heatmapData.push([lat, lng, value.id_tree, value.img_tree]);
+					heatmapData.push([lat, lng, value.id_tree, value.tree_lot_id, value.tree_offset, value.img_tree]);
 
 					// added to determine map center
 					mapCenter[0] += lat;
@@ -282,10 +281,7 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 			// count total page
 			var totalPage = Math.ceil(APIresult.totalCount / treePerPage);
 
-			if (page < 2) {
-
-				console.log('test',APIresult);
-
+			if (page == 1) {
 				// initiate the map, heatmap
 				var mapCentered = _.map(mapCenter, function(num){ return num / heatmapData.length ; });
 				window.map = new L.Map('trees-id-map', {center: mapCentered, zoom: polygonBreakPoint, layers: [Esri_WorldImagery]});
@@ -305,110 +301,54 @@ function archiveTreeMap(elementID,heatmapData,polygonData,page){
 				}
 				archiveTreeMap(elementID, heatmapData, polygonData, page);
 
-			} else {
-
-				console.log(heatmapData);
-
-				// change the map zoom and drag
-				window.map.on('zoomend dragend', function(e) {
-					var zoom_level = window.map.getZoom();
-
-					if (zoom_level >= markerBreakPoint){
-						var
-							bounds = window.map.getBounds(),
-							west = bounds.getWest(),
-							south = bounds.getSouth(),
-							east = bounds.getEast(),
-							north = bounds.getNorth()
-						;
-
-						var currentTree = _.filter(heatmapData, function(num){ return num[1] > (west - 0.00005 ) && num[1] < (east + 0.00005) && num[0] < (north + 0.00005) && num[0] > (south - 0.00005); });
-
-						if (currentTree.length > 0) {
-							currentTree.forEach(function(value, index){
-								if (lastTree.indexOf(value) === -1) {
-									lastTree.push(value);
-									// console.log(value);
-									var currentTreePage = treePage.replace('[lot]',value[3]).replace('[offset]',parseInt(value[2]));
-									var treeDetail = '<img src="' + value[3] +'" width="200">';
-									activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
-								};
-							})
-						}
-
-						var removeTree = _.difference(lastTree, currentTree);
-						removeTree.forEach(function(value){
-							var index = lastTree.indexOf(value);
-							lastTree.splice(index, 1);
-							window.map.removeLayer(activeTree[value[2]]);
-						})
-
-						window.map.removeLayer(window.heat);
-
-					} else{
-
-						window.heat.addTo(window.map);
-						lastTree.forEach(function(value){
-							window.map.removeLayer(activeTree[value[2]]);
-						});
-
-						lastTree = [];
-					}
-				});
-
-				// window.map.on('zoomend dragend', function(e) {
-				// 	var zoom_level = window.map.getZoom();
-				// 	if (zoom_level >= 20){
-				// 		var
-				// 			bounds = window.map.getBounds(),
-				// 			west = bounds.getWest(),
-				// 			south = bounds.getSouth(),
-				// 			east = bounds.getEast(),
-				// 			north = bounds.getNorth()
-				// 		;
-
-				// 		var currentTree = _.filter(heatmapData, function(num){ return num[1] > (west - 0.00005 ) && num[1] < (east + 0.00005) && num[0] < (north + 0.00005) && num[0] > (south - 0.00005); });
-
-				// 		if (currentTree.length > 0) {
-
-				// 			console.log('currentTree.length', currentTree.length);
-				// 			console.log('lastTree.length', lastTree.length);
-
-				// 			currentTree.forEach(function(value, index){
-				// 				if (lastTree.indexOf(value) === -1) {
-				// 					lastTree.push(value);
-
-				// 			// 		var currentTreePage = treePage.replace('[lot]',treeData[value[2]].tree_lot_id).replace('[offset]',treeData[value[2]].tree_offset);
-				// 			// 		var treeDetail = '<a href="'+ currentTreePage +'"><img src="' + treeData[value[2]].img_tree +'" width="200"></a>';
-				// 			// 		activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
-									
-				// 					// console.log(treeData[value[2]].id_tree+'|'+value[0]+'|'+value[1]);
-				// 				};
-				// 			})
-				// 		}
-				// 		//console.log(activeTree);
-
-				// 		var removeTree = _.difference(lastTree, currentTree);
-				// 		removeTree.forEach(function(value){
-				// 			var index = lastTree.indexOf(value);
-				// 			lastTree.splice(index, 1);
-				// 			window.map.removeLayer(activeTree[value[2]]);
-				// 		})
-
-				// 		window.map.removeLayer(window.heat);
-
-				// 	} else{
-
-				// 		window.heat.addTo(window.map);
-				// 		lastTree.forEach(function(value){
-				// 			window.map.removeLayer(activeTree[value[2]]);
-				// 		});
-
-				// 		lastTree = [];
-				// 	}
-				// });
-				
 			}
+
+			// change the map zoom and drag
+			window.map.on('zoomend dragend', function(e) {
+				var zoom_level = window.map.getZoom();
+
+				if (zoom_level >= markerBreakPoint){
+					var
+						bounds = window.map.getBounds(),
+						west = bounds.getWest(),
+						south = bounds.getSouth(),
+						east = bounds.getEast(),
+						north = bounds.getNorth()
+					;
+
+					var currentTree = _.filter(heatmapData, function(num){ return num[1] > (west - 0.00001 ) && num[1] < (east + 0.00001) && num[0] < (north + 0.00001) && num[0] > (south - 0.00001); });
+
+					if (currentTree.length > 0) {
+						currentTree.forEach(function(value, index){
+							if (lastTree.indexOf(value) === -1) {
+								lastTree.push(value);
+								// value = [lat, lng, value.id_tree, value.tree_lot_id, value.tree_offset, value.img_tree]);
+								var currentTreePage = treePage.replace('[id]',value[2]).replace('[lot]',value[3]).replace('[offset]',parseInt(value[4]));
+								var treeDetail = '<a href="'+currentTreePage+'"><img src="' + value[5] +'" width="200"></a>';
+								activeTree[value[2]] = L.marker([value[0], value[1]], {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
+							};
+						})
+					}
+
+					var removeTree = _.difference(lastTree, currentTree);
+					removeTree.forEach(function(value){
+						var index = lastTree.indexOf(value);
+						lastTree.splice(index, 1);
+						window.map.removeLayer(activeTree[value[2]]);
+					})
+
+					window.map.removeLayer(window.heat);
+
+				} else{
+
+					window.heat.addTo(window.map);
+					lastTree.forEach(function(value){
+						window.map.removeLayer(activeTree[value[2]]);
+					});
+					lastTree = [];
+				}
+			});
+
 		}
 	});
 }
@@ -542,7 +482,6 @@ function treeMap(elementID){
 			window.map = new L.Map('trees-id-map', {center: APIresult.data[0].tree_kordinat , zoom: markerBreakPoint, layers: [Esri_WorldImagery]});
 			window.map.scrollWheelZoom.disable();
 			APIresult.data.forEach(function(value,index){
-				console.log(value, index);
 				var treeDetail = '<img src="' +  value.img_tree +'" width="200">';
 				var treeMarker = L.marker(value.tree_kordinat, {icon: treeIcon}).addTo(window.map).bindPopup(treeDetail);
 			});
