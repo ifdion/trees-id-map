@@ -12,12 +12,18 @@
 
 	<h4>Usage</h4>
 	<pre style="white-space:pre-line;">
-		&lt;div id="trees-id-map" data-nohp="0811101272" &gt;&lt;/div&gt;
+		&lt;div id="trees-id-map" data-tree-page="http://portal.trees.id/tree-view-new/[lot]/[offset]" data-nohp="0811101272" &gt;&lt;/div&gt;
 
 		&lt;script type="text/javascript"&gt;
 			archiveTreeMap('trees-id-map');
 		&lt;/script&gt;
 	</pre>
+
+	<h4>Required Parameters / Attributes</h4>
+	<dl>
+		<dt><code>data-tree-page</code></dt>
+		<dd><strong>[string]</strong> Base URL template to be used as single tree URL. There are 3 special string available to construct the tree url. <code>[id] will be replaced by the tree id, <code>[lot]</code> by lot id, <code>[offset]</code> by tree offset</dd>
+	</dl>
 
 	<h4>Optional Parameters / Attributes</h4>
 	<dl>
@@ -36,7 +42,7 @@
 	</dl>
 
 	<h4>Demo</h4>
-	<div id="trees-id-map" data-nohp="0811101272" ></div>
+	<div id="trees-id-map" data-nohp="0811101272" data-tree-page="http://portal.trees.id/tree-view-new/[lot]/[offset]"></div>
 	
 	<script type="text/javascript" src="js/vendors.js"></script>
 	<script type="text/javascript" src="js/plugins.js"></script>
